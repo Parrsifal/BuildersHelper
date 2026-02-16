@@ -125,6 +125,20 @@ struct SettingsView: View {
                     .font(.subheadline)
                     .foregroundColor(AppTheme.textSecondary)
             }
+
+            if let url = URL(string: "https://www.termsfeed.com/live/f29340e4-05ff-4a2b-963a-6ef134959c2b") {
+                Link(destination: url) {
+                    HStack {
+                        Text("Privacy Policy")
+                            .font(.subheadline)
+                            .foregroundColor(AppTheme.accent)
+                        Spacer()
+                        Image(systemName: "arrow.up.right")
+                            .font(.caption)
+                            .foregroundColor(AppTheme.textSecondary)
+                    }
+                }
+            }
         }
         .cardStyle()
     }
