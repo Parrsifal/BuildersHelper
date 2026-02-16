@@ -1,0 +1,65 @@
+workflows:
+  ios-workflow:
+    name: BuildersManager iOS
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    integrations:
+      app_store_connect: Builders Manager API # TODO: создай API key интеграцию в Codemagic и укажи её имя здесь
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.buildershelper
+      vars:
+        XCODE_PROJECT: "BuildersManager.xcodeproj"
+        XCODE_SCHEME: "BuildersManager"
+        APP_STORE_APP_ID: "REPLACE_WITH_APP_ID" # TODO: замени на App ID из App Store Connect
+        APP_STORE_CONNECT_KEY_IDENTIFIER: "REPLACE_WITH_KEY_ID" # TODO: замени на Key ID из App Store Connect API Key
+        APP_STORE_CONNECT_ISSUER_ID: "REPLACE_WITH_ISSUER_ID" # TODO: замени на Issuer ID из App Store Connect
+      xcode: 16.2
+    scripts:
+      - name: Set build number
+        script: |
+          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APP_ID" || echo "0")
+          BUILD_NUMBER=$((LATEST_BUILD_NUMBER + 1))
+          cd $CM_BUILD_DIR
+          agvtool new-version -all $BUILD_NUMBER
+          echo "Build number set to: $BUILD_NUMBER"
+      - name: Fetch signing certificates and profiles
+        script: |
+          app-store-connect fetch-signing-files com.buildershelper \
+            --type IOS_APP_STORE \
+            --create
+          keychain initialize
+          keychain add-certificates
+          xcode-project use-profiles
+        working_directory: $CM_BUILD_DIR
+      - name: Build ipa for distribution
+        script: |
+          xcodebuild -project "$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME" \
+            -sdk iphoneos \
+            -configuration Release \
+            -archivePath build/BuildersManager.xcarchive \
+            clean archive \
+            CODE_SIGN_STYLE=Manual
+          xcodebuild -exportArchive \
+            -archivePath build/BuildersManager.xcarchive \
+            -exportOptionsPlist ~/export_options.plist \
+            -exportPath build/ios/ipa
+        working_directory: $CM_BUILD_DIR
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - build/*.xcarchive
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      email:
+        recipients:
+          - superhuman555@gmail.com
+        notify:
+          success: true
+          failure: true
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
