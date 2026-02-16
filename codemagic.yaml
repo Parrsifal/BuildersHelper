@@ -4,7 +4,7 @@ workflows:
     instance_type: mac_mini_m2
     max_build_duration: 60
     integrations:
-      app_store_connect: Builders Manager API # TODO: создай API key интеграцию в Codemagic и укажи её имя здесь
+      app_store_connect: BUILDER API APPSTORE # TODO: создай API key интеграцию в Codemagic и укажи её имя здесь
     environment:
       ios_signing:
         distribution_type: app_store
@@ -12,9 +12,9 @@ workflows:
       vars:
         XCODE_PROJECT: "BuildersManager.xcodeproj"
         XCODE_SCHEME: "BuildersManager"
-        APP_STORE_APP_ID: "REPLACE_WITH_APP_ID" # TODO: замени на App ID из App Store Connect
-        APP_STORE_CONNECT_KEY_IDENTIFIER: "REPLACE_WITH_KEY_ID" # TODO: замени на Key ID из App Store Connect API Key
-        APP_STORE_CONNECT_ISSUER_ID: "REPLACE_WITH_ISSUER_ID" # TODO: замени на Issuer ID из App Store Connect
+        APP_STORE_APP_ID: "6759253180" # TODO: замени на App ID из App Store Connect
+        APP_STORE_CONNECT_KEY_IDENTIFIER: "QU8A7362L5" # TODO: замени на Key ID из App Store Connect API Key
+        APP_STORE_CONNECT_ISSUER_ID: "8daddef0-efc9-4ce6-aaa3-451c4566444a" # TODO: замени на Issuer ID из App Store Connect
       xcode: 16.2
     scripts:
       - name: Set build number
@@ -55,7 +55,7 @@ workflows:
     publishing:
       email:
         recipients:
-          - superhuman555@gmail.com
+          - lyashko.denis@gmail.com
         notify:
           success: true
           failure: true
