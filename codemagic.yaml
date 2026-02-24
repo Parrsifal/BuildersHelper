@@ -4,7 +4,7 @@ workflows:
     instance_type: mac_mini_m2
     max_build_duration: 60
     integrations:
-      app_store_connect: BUILDER API APPSTORE # TODO: создай API key интеграцию в Codemagic и укажи её имя здесь
+      app_store_connect: BUILDER API APPSTORE
     environment:
       ios_signing:
         distribution_type: app_store
@@ -25,12 +25,16 @@ workflows:
           cd $CM_BUILD_DIR
           agvtool new-version -all $BUILD_NUMBER
           echo "Build number set to: $BUILD_NUMBER"
+      - name: Set up code signing
+        script: |
+          xcode-project use-profiles
+        working_directory: $CM_BUILD_DIR
       - name: Fetch signing certificates and profiles
         script: |
           app-store-connect fetch-signing-files com.buildershelper \
             --type IOS_APP_STORE \
             --create
-          app-store-connect fetch-signing-files com.buildershelper.Notification \
+          app-store-connect fetch-signing-files "$EXTENSION_BUNDLE_ID" \
             --type IOS_APP_STORE \
             --create
           keychain initialize
