@@ -2,24 +2,20 @@ import SwiftUI
 
 @main
 struct BuildersManagerApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @StateObject private var storage = LocalStorage()
 
     var body: some Scene {
         WindowGroup {
-            EntryView()
+            RootView()
+                .environmentObject(storage)
+                .preferredColorScheme(.light)
         }
     }
 }
 
-struct EntryView: View {
-    @StateObject private var storage = LocalStorage()
-
-    var body: some View {
-        ContentView()
-            .environmentObject(storage)
-            .preferredColorScheme(.light)
-    }
-}
-
 #Preview {
-    EntryView()
+    RootView()
+        .environmentObject(LocalStorage())
+        .preferredColorScheme(.light)
 }

@@ -12,9 +12,10 @@ workflows:
       vars:
         XCODE_PROJECT: "BuildersManager.xcodeproj"
         XCODE_SCHEME: "BuildersManager"
-        APP_STORE_APP_ID: "6759253180" # TODO: замени на App ID из App Store Connect
-        APP_STORE_CONNECT_KEY_IDENTIFIER: "QU8A7362L5" # TODO: замени на Key ID из App Store Connect API Key
-        APP_STORE_CONNECT_ISSUER_ID: "8daddef0-efc9-4ce6-aaa3-451c4566444a" # TODO: замени на Issuer ID из App Store Connect
+        APP_STORE_APP_ID: "6759253180"
+        APP_STORE_CONNECT_KEY_IDENTIFIER: "QU8A7362L5"
+        APP_STORE_CONNECT_ISSUER_ID: "8daddef0-efc9-4ce6-aaa3-451c4566444a"
+        EXTENSION_BUNDLE_ID: "com.buildershelper.Notification"
       xcode: 16.2
     scripts:
       - name: Set build number
@@ -27,6 +28,9 @@ workflows:
       - name: Fetch signing certificates and profiles
         script: |
           app-store-connect fetch-signing-files com.buildershelper \
+            --type IOS_APP_STORE \
+            --create
+          app-store-connect fetch-signing-files com.buildershelper.Notification \
             --type IOS_APP_STORE \
             --create
           keychain initialize
