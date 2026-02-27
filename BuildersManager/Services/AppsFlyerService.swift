@@ -147,7 +147,13 @@ class AppsFlyerService: NSObject, ObservableObject {
             return attStatus
         }
 
-        let status = await ATTrackingManager.requestTrackingAuthorization()
+        let status = await withCheckedContinuation { continuation in
+            DispatchQueue.main.async {
+                ATTrackingManager.requestTrackingAuthorization { status in
+                    continuation.resume(returning: status)
+                }
+            }
+        }
         await MainActor.run {
             attStatus = status
         }
