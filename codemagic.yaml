@@ -62,6 +62,10 @@ workflows:
         script: |
           cd $CM_BUILD_DIR
           bundle install
+      - name: Write API key to file
+        script: |
+          mkdir -p $CM_BUILD_DIR/fastlane/keys
+          echo -e "$APP_STORE_CONNECT_PRIVATE_KEY" > $CM_BUILD_DIR/fastlane/keys/AuthKey.p8
       - name: Upload metadata and screenshots
         script: |
           cd $CM_BUILD_DIR
