@@ -1,0 +1,1 @@
+Konstruktion,Bauherr,Website,Manager,Arbeiter,Budget,Schichten,Planer,Projekt,Kosten

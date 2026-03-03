@@ -1,0 +1,1 @@
+rakentaminen,rakentaja,sivusto,johtaja,työntekijät,budjetti,vuorot,suunnittelija,projekti,kulut

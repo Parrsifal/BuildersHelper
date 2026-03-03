@@ -1,0 +1,1 @@
+výstavba,staviteľ,miesto,manažér,pracovníci,rozpočet,zmeny,plánovač,projekt,výdavky

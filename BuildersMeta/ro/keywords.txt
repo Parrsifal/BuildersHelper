@@ -1,0 +1,1 @@
+construcție,constructor,site,manager,muncitori,buget,schimburi,planificator,proiect,cheltuieli

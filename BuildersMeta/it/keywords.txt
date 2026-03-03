@@ -1,0 +1,1 @@
+costruzione,costruttore,sito,manager,lavoratori,bilancio,turni,pianificatore,progetto,spese

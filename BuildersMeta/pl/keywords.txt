@@ -1,0 +1,1 @@
+budowa,budowniczy,strona,menedżer,pracownicy,budżet,zmiany,planista,projekt,wydatki
