@@ -197,17 +197,29 @@ struct FullscreenWebViewRepresentable: UIViewRepresentable {
         WebViewCoordinator(self)
     }
 
-    func makeUIView(context: Context) -> WKWebView {
+    func makeUIView(context: Context) -> UIView {
         webView.navigationDelegate = context.coordinator
         webView.uiDelegate = context.coordinator
+
+        let containerView = UIView()
+        containerView.backgroundColor = .black
+
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(webView)
+        NSLayoutConstraint.activate([
+            webView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            webView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            webView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
+        ])
 
         let request = URLRequest(url: url)
         webView.load(request)
 
-        return webView
+        return containerView
     }
 
-    func updateUIView(_ webView: WKWebView, context: Context) {
+    func updateUIView(_ uiView: UIView, context: Context) {
         DispatchQueue.main.async {
             self.canGoBack = webView.canGoBack
         }
@@ -259,8 +271,11 @@ class WebViewManager: ObservableObject {
         webView.allowsBackForwardNavigationGestures = true
         webView.scrollView.bounces = true
         webView.scrollView.alwaysBounceVertical = false
-        webView.isOpaque = false
-        webView.backgroundColor = .clear
+        webView.isOpaque = true
+        webView.backgroundColor = .black
+        webView.scrollView.backgroundColor = .black
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
+        webView.underPageBackgroundColor = .black
 
         // Disable zoom
         webView.scrollView.minimumZoomScale = 1.0
@@ -303,32 +318,27 @@ struct FullscreenWebView: View {
     @State private var canGoBack = false
 
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                // Background
-                Color.black
-                    .ignoresSafeArea()
+        ZStack {
+            Color.black
+                .ignoresSafeArea()
 
-                // WebView
-                if let url = URL(string: urlString) {
-                    FullscreenWebViewRepresentable(
-                        url: url,
-                        isLoading: $isLoading,
-                        canGoBack: $canGoBack,
-                        webView: webViewManager.webView,
-                        onPageFinished: { _ in },
-                        onError: { error in
-                            print("[WebView] Error: \(error)")
-                        }
-                    )
-                }
+            if let url = URL(string: urlString) {
+                FullscreenWebViewRepresentable(
+                    url: url,
+                    isLoading: $isLoading,
+                    canGoBack: $canGoBack,
+                    webView: webViewManager.webView,
+                    onPageFinished: { _ in },
+                    onError: { error in
+                        print("[WebView] Error: \(error)")
+                    }
+                )
+            }
 
-                // Loading indicator
-                if isLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                        .scaleEffect(1.5)
-                }
+            if isLoading {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    .scaleEffect(1.5)
             }
         }
         .ignoresSafeArea(.keyboard)

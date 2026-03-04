@@ -27,6 +27,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         PushNotificationService.shared.configure()
         print("[AppDelegate] Push service configured")
 
+        // Set window background to black to prevent white flashes during rotation
+        DispatchQueue.main.async {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                windowScene.windows.forEach { $0.backgroundColor = .black }
+            }
+        }
+
         return true
     }
 
