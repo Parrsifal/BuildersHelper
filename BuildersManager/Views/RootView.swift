@@ -5,7 +5,9 @@ struct RootView: View {
     @EnvironmentObject var storage: LocalStorage
 
     var body: some View {
-        Group {
+        ZStack {
+            Theme.backgroundColor.ignoresSafeArea()
+
             switch appStateManager.currentState {
             case .loading:
                 LoadingView()
