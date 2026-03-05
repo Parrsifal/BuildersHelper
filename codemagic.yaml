@@ -62,11 +62,6 @@ workflows:
         script: |
           cd $CM_BUILD_DIR
           bundle install
-      - name: Upload metadata and screenshots
-        script: |
-          cd $CM_BUILD_DIR
-          bundle exec fastlane upload_metadata
-        working_directory: $CM_BUILD_DIR
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
